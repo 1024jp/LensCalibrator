@@ -149,14 +149,14 @@ def main(datafile, z=None, saves_file=False, removes_perspective=True,
 
     if removes_perspective:
         projector = Projector(undistorted_points, data.dest_points)
-        diffs = []
-        for point, (dest_x, dest_y) in zip(undistorted_points,
-                                           data.dest_points):
-            x, y = projector.project_point(*point)
-            diffs.append([x - dest_x, y - dest_y])
 
         # show stats if needed
         if shows_stats:
+            diffs = []
+            for point, (dest_x, dest_y) in zip(undistorted_points,
+                                               data.dest_points):
+                x, y = projector.project_point(*point)
+                diffs.append([x - dest_x, y - dest_y])
             abs_diffs = [(abs(x), abs(y)) for x, y in diffs]
             print('mean: {:.2f}, {:.2f}'.format(*np.mean(abs_diffs, axis=0)))
             print(' std: {:.2f}, {:.2f}'.format(*np.std(abs_diffs, axis=0)))
