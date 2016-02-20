@@ -9,7 +9,7 @@ Requirements
 
 - Python 2.x
 - modules
-    - see [requrements.txt]()
+    - see [requirements.txt](requirements.txt)
 
 
 Usage
