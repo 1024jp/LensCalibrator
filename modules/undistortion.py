@@ -15,9 +15,9 @@ class Undistorter(object):
              cv2.cv.CV_CALIB_FIX_K3
              )
 
-    def __init__(self, image_points, ideal_points, size=(3840, 2160)):
+    def __init__(self, image_points, dest_points, size=(3840, 2160)):
         self.image_points = np.float32([image_points])
-        self.dest_3dpoints = np.float32([[[x, y, 0] for x, y in ideal_points]])
+        self.dest_3dpoints = np.float32([[[x, y, 0] for x, y in dest_points]])
         self.image_size = size
         self._calibrate_lens()
 
