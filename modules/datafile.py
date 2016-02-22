@@ -89,8 +89,12 @@ class Data(object):
 
     def process_coordinates(self, processor_handler, output):
         with self.datafile as file_in:
-            reader = csv.reader(file_in, delimiter='\t')
-            writer = csv.writer(output, delimiter='\t', lineterminator='\n')
+            # detect delimiter
+            dialect = csv.Sniffer().sniff(file_in.read(1024), delimiters=',\t')
+            file_in.seek(0)
+
+            reader = csv.reader(file_in, dialect)
+            writer = csv.writer(output, dialect)
 
             for row in reader:
                 new_row = row[:]  # copy
