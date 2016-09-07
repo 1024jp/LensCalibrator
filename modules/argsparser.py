@@ -17,7 +17,7 @@ except:
 
 
 class Parser(argparse.ArgumentParser):
-    description = 'Calibrate coordinates in picture to real world.'
+    description = 'Translate coordinates in a picture to the real world.'
     datafile_name = 'source'
 
     def __init__(self):
@@ -70,6 +70,23 @@ class Parser(argparse.ArgumentParser):
                                 metavar=('WIDTH', 'HEIGHT'),
                                 help=("set dimension of the image"
                                       " (default: %(default)s)")
+                                )
+        fileformat.add_argument('--in_cols',
+                                type=int,
+                                nargs=2,
+                                default=[2, 3],
+                                metavar='INDEX',
+                                help=("set column positions of x, y in file "
+                                      " (default: %(default)s)")
+                                )
+        fileformat.add_argument('--out_cols',
+                                type=int,
+                                nargs=2,
+                                default=None,
+                                metavar='INDEX',
+                                help=("set column positions of x, y in file for"
+                                      " calibrated data"
+                                      " (default: same as in_cols")
                                 )
         fileformat.add_argument('-z',
                                 type=int,

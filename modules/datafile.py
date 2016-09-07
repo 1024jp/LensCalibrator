@@ -12,17 +12,20 @@ from itertools import izip
 
 # constants
 LOC_FILENAME = "Location.csv"
-IGNORE_COLUMNS = 2  # number of first columns to ignore in data file
+DEFAULT_INPUT_COLUMNS = (2,3)
 FIND_LEVEL = 3  # number of parent directories to find in.
 
 
 class Data(object):
-    def __init__(self, datafile, z=None):
+    def __init__(self, datafile, z=None, in_cols=None, out_cols=None):
         """Initialize Data object.
 
         Arguments:
         datafile (file) -- main data file in file-like object form.
         z_filter (int) -- Z-axis in destination points to obtain.
+        in_cols (int, int) -- column indexes of x,y coordinates in datafile.
+        out_cols (int, int) -- column indexes of x,y coordinates for calibrated
+                               data.
         """
         # sanitize path
         self.datafile = datafile
@@ -33,6 +36,9 @@ class Data(object):
         image_points, dest_points = self._load_location(z_filter=z)
         self.image_points = image_points
         self.dest_points = dest_points
+
+        self.in_cols = in_cols or DEFAULT_INPUT_COLUMNS
+        self.out_cols = self.in_cols
 
     def _find_file(self, filename, subdirectory=None):
         """Find file in the same directory and also parent directories
@@ -88,9 +94,12 @@ class Data(object):
         return path
 
     def process_coordinates(self, processor_handler, output):
+        in_cols = self.in_cols
+        out_cols= self.out_cols
+        
         with open(self.datafile.name) as file_in:
             # detect delimiter
-            dialect = csv.Sniffer().sniff(file_in.read(1024), delimiters=',\t')
+            dialect = csv.Sniffer().sniff(file_in.read(2048), delimiters=',\t')
             file_in.seek(0)
 
             reader = csv.reader(file_in, dialect)
@@ -98,27 +107,18 @@ class Data(object):
 
             for row in reader:
                 new_row = row[:]  # copy
-                for i, pair in enumerate(pairwise(row[IGNORE_COLUMNS:])):
-                    try:
-                        x, y = map(float, pair)
-                    except ValueError:  # go to next column if not number
-                        break
 
-                    # translate
-                    x, y = processor_handler(x, y)
+                try:
+                    x = float(row[in_cols[0]])
+                    y = float(row[in_cols[1]])
+                except:  # go to next column if not number
+                    writer.writerow(new_row)
+                    continue
 
-                    column = 2 * i + IGNORE_COLUMNS
-                    new_row[column] = int(x)
-                    new_row[column + 1] = int(y)
+                # translate
+                x, y = processor_handler(x, y)
+
+                new_row[out_cols[0]] = int(x)
+                new_row[out_cols[1]] = int(y)
 
                 writer.writerow(new_row)
-
-
-def pairwise(iterable):
-    """Iterate every two items.
-
-    Arguments:
-    iterable -- an iterable object.
-    """
-    it = iter(iterable)
-    return izip(it, it)

@@ -129,9 +129,9 @@ def estimate_clipping_rect(projector, size):
     return rect, flipped
 
 
-def main(datafile, z=None, saves_file=False, removes_perspective=True,
-         shows_stats=False):
-    data = Data(datafile, z=z)
+def main(datafile, z=None, in_cols=None, saves_file=False,
+         removes_perspective=True, shows_stats=False):
+    data = Data(datafile, z=z, in_cols=in_cols)
     imgpath = data.datafile.name
     image = cv2.imread(imgpath)
     size = image.shape[::-1][1:3]
@@ -196,5 +196,5 @@ if __name__ == "__main__":
         print("This script doesn't have test.")
         sys.exit()
 
-    main(args.file, z=args.z, saves_file=args.save,
+    main(args.file, z=args.z, in_cols=args.in_cols, saves_file=args.save,
          removes_perspective=args.perspective, shows_stats=args.stats)

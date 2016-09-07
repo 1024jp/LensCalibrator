@@ -19,8 +19,8 @@ from modules.projection import Projector
 DEFAULT_IMAGE_SIZE = (3840, 2160)
 
 
-def main(datafile, outfile, size=DEFAULT_IMAGE_SIZE, z=None):
-    data = Data(datafile, z=z)
+def main(datafile, outfile, size=DEFAULT_IMAGE_SIZE, z=None, in_cols=None):
+    data = Data(datafile, z=z, in_cols=in_cols)
     undistorter = Undistorter(data.image_points, data.dest_points, size)
     projector = Projector(undistorter.undistorted_refpoints.tolist(),
                           data.dest_points)
@@ -32,8 +32,8 @@ def main(datafile, outfile, size=DEFAULT_IMAGE_SIZE, z=None):
     data.process_coordinates(processor_handler, outfile)
 
 
-def undistort(datafile, outfile, size=DEFAULT_IMAGE_SIZE, z=None):
-    data = Data(datafile, z=z)
+def undistort(datafile, outfile, size=DEFAULT_IMAGE_SIZE, z=None, in_cols=None):
+    data = Data(datafile, z=z, in_cols=in_cols)
     undistorter = Undistorter(data.image_points, data.dest_points, size)
 
     # process data file
@@ -42,8 +42,8 @@ def undistort(datafile, outfile, size=DEFAULT_IMAGE_SIZE, z=None):
     data.process_coordinates(processor_handler, outfile)
 
 
-def project(datafile, outfile, z=None):
-    data = Data(datafile, z=z)
+def project(datafile, outfile, z=None, in_cols=None):
+    data = Data(datafile, z=z, in_cols=in_cols)
     projector = Projector(data.image_points, data.dest_points)
 
     # process data file
@@ -95,6 +95,6 @@ if __name__ == "__main__":
         unittest.TextTestRunner().run(suite)
         sys.exit()
 
-    main(args.file, args.out, args.size, args.z)
-    undistort(args.file, args.out, args.size, args.z)
-    project(args.file, args.out, args.z)
+    main(args.file, args.out, args.size, args.z, args.in_cols)
+#     undistort(args.file, args.out, args.size, args.z, args.in_cols)
+#     project(args.file, args.out, args.z, args.in_cols)

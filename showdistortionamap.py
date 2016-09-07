@@ -18,14 +18,14 @@ class ArgsParser(argsparser.Parser):
     datafile_name = 'location'
 
 
-def main(location_file, size, z=None):
+def main(location_file, size, z=None, in_cols=None):
     """Display potential map for given location file.
 
     Arguments:
     location_file (file) -- Location file in file-like object.
     size (int, int) -- Width and height of source image.
     """
-    data = Data(location_file, z=z)
+    data = Data(location_file, z=z, in_cols=in_cols)
     undistorter = Undistorter(data.image_points, data.dest_points, size)
     undistorter.show_map()
 
@@ -48,4 +48,4 @@ if __name__ == "__main__":
         test()
         sys.exit()
 
-    main(args.file, args.size, args.z)
+    main(args.file, args.size, args.z, in_cols=args.in_cols)
