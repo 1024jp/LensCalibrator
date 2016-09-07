@@ -15,12 +15,11 @@ Requirements
 Sample
 ------------------------
 
-- original image
-    <img src="documentations/example_original.png" width="480"/>
-- undistorted
-    <img src="documentations/example_undistortion.png" width="480"/>
-- undistorted+projected
-    <img src="documentations/example_projection.png" width="480"/>
+|                | Image |
+|----------------|-------|
+| original image | <img src="documentation/example_original.png" width="480"/> |
+| undistorted    | <img src="documentation/example_undistortion.png" width="480"/> |
+| undistorted + projected | <img src="documentation/example_projection.png" width="480"/> |
 
 Usage
 ------------------------
