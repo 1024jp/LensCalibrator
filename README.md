@@ -12,6 +12,16 @@ Requirements
     - see [requirements.txt](requirements.txt)
 
 
+Sample
+------------------------
+
+- original image
+    <img src="documentations/example_original.png" width="480"/>
+- undistorted
+    <img src="documentations/example_undistortion.png" width="480"/>
+- undistorted+projected
+    <img src="documentations/example_projection.png" width="480"/>
+
 Usage
 ------------------------
 
