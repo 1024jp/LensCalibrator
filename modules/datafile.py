@@ -88,7 +88,7 @@ class Data(object):
         return path
 
     def process_coordinates(self, processor_handler, output):
-        with self.datafile as file_in:
+        with open(self.datafile.name) as file_in:
             # detect delimiter
             dialect = csv.Sniffer().sniff(file_in.read(1024), delimiters=',\t')
             file_in.seek(0)
