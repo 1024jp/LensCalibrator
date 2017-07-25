@@ -2,12 +2,11 @@
 """
 Datafile object for tracklog and Loc file.
 
-(C) 2016 1024jp
+(C) 2016-2017 1024jp
 """
 
 import csv
 import os
-from itertools import izip
 
 
 # constants
@@ -77,7 +76,7 @@ class Data(object):
                 first_char = row[0][0]
                 if first_char.isalpha() or first_char is '#':
                     continue
-                row = map(float, row)
+                row = list(map(float, row))
                 image_point = row[3:5]
                 dest_point = row[0:3]
                 if z_filter and dest_point[2] != z_filter:

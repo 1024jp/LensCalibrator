@@ -2,7 +2,7 @@
 """
 
 
-(C) 2007-2016 1024jp
+(C) 2007-2017 1024jp
 """
 
 import cv2
@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 
 
 class Undistorter(object):
-    flags = (cv2.cv.CV_CALIB_ZERO_TANGENT_DIST |
-             cv2.cv.CV_CALIB_FIX_K3
+    flags = (cv2.CALIB_ZERO_TANGENT_DIST |
+             cv2.CALIB_FIX_K3
              )
 
     def __init__(self, image_points, dest_points, size=(3840, 2160)):
@@ -24,7 +24,7 @@ class Undistorter(object):
     def _calibrate_lens(self):
         retval, camera_matrix, coeffs, rvecs, tvecs = cv2.calibrateCamera(
                 [self.dest_3dpoints], [self.image_points], self.image_size,
-                flags=self.flags)
+                None, None, flags=self.flags)
 
         self.new_camera_matrix = cv2.getOptimalNewCameraMatrix(
                 camera_matrix, coeffs, self.image_size, 0)[0]
