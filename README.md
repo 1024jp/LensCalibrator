@@ -7,7 +7,7 @@ __LensCalibrator__ converts coordinates in a picture to the real world based on 
 Requirements
 ------------------------
 
-- Python 2.x
+- Python 3.x
 - modules
     - see [requirements.txt](requirements.txt)
 
