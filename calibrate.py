@@ -2,13 +2,15 @@
 """
 Remove distortion of camera lens and project to the real world coordinates.
 
-(C) 2016 1024jp
+(C) 2016-2017 1024jp
 """
 
 import io
 import os
 import unittest
 import sys
+
+import numpy as np
 
 from modules import argsparser
 from modules.datafile import Data
@@ -22,7 +24,8 @@ DEFAULT_IMAGE_SIZE = (3840, 2160)
 def main(datafile, outfile, size=DEFAULT_IMAGE_SIZE, z=None, in_cols=None):
     data = Data(datafile, z=z, in_cols=in_cols)
     undistorter = Undistorter(data.image_points, data.dest_points, size)
-    projector = Projector(undistorter.undistorted_refpoints.tolist(),
+    undistorded_refpoints = undistorter.calibrate_points(data.image_points)
+    projector = Projector(undistorded_refpoints.tolist(),
                           data.dest_points)
 
     # process data file

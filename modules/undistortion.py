@@ -16,25 +16,17 @@ class Undistorter:
              )
 
     def __init__(self, image_points, dest_points, size=(3840, 2160)):
-        self.image_points = np.float32([image_points])
-        self.dest_3dpoints = np.float32([[[x, y, 0] for x, y in dest_points]])
+        dest_3dpoints = [[x, y, 0] for x, y in dest_points]
+        _, camera_matrix, dist_coeffs, _, _ = cv2.calibrateCamera(
+                [np.float32([dest_3dpoints])],
+                [np.float32([image_points])],
+                size, None, None, flags=self.flags)
+
         self.image_size = size
-        self._calibrate_lens()
-
-    def _calibrate_lens(self):
-        retval, camera_matrix, coeffs, rvecs, tvecs = cv2.calibrateCamera(
-                [self.dest_3dpoints], [self.image_points], self.image_size,
-                None, None, flags=self.flags)
-
-        self.new_camera_matrix = cv2.getOptimalNewCameraMatrix(
-                camera_matrix, coeffs, self.image_size, 0)[0]
-
         self.camera_matrix = camera_matrix
-        self.dist_coeffs = coeffs
-
-    @property
-    def undistorted_refpoints(self):
-        return self.calibrate_points(self.image_points[0])
+        self.dist_coeffs = dist_coeffs
+        self.new_camera_matrix = cv2.getOptimalNewCameraMatrix(
+                camera_matrix, dist_coeffs, self.image_size, 0)[0]
 
     def calibrate_points(self, points):
         return cv2.undistortPoints(np.array([points]), self.camera_matrix,
