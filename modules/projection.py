@@ -2,14 +2,14 @@
 """
 
 
-(C) 2007-2016 1024jp
+(C) 2007-2017 1024jp
 """
 
 import numpy as np
 import cv2
 
 
-class Projector(object):
+class Projector:
     def __init__(self, image_points, ideal_points):
         self.homography = self._estimate_homography(image_points, ideal_points)
 

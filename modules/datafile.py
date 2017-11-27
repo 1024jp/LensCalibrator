@@ -15,7 +15,7 @@ DEFAULT_INPUT_COLUMNS = (2,3)
 FIND_LEVEL = 3  # number of parent directories to find in.
 
 
-class Data(object):
+class Data:
     def __init__(self, datafile, z=None, in_cols=None, out_cols=None):
         """Initialize Data object.
 

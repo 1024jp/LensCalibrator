@@ -10,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-class Undistorter(object):
+class Undistorter:
     flags = (cv2.CALIB_ZERO_TANGENT_DIST |
              cv2.CALIB_FIX_K3
              )
