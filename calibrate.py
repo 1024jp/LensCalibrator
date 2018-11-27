@@ -97,7 +97,7 @@ if __name__ == "__main__":
         unittest.TextTestRunner().run(suite)
         sys.exit()
     
-    data = Data(args.file, in_cols=args.in_cols)
+    data = Data(args.file, loc_path=args.location, in_cols=args.in_cols)
     main(data, args.out, args.size)
 #     undistort(data, args.out, args.size)
 #     project(data, args.out)

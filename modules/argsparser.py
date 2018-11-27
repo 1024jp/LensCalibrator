@@ -60,6 +60,14 @@ class Parser(argparse.ArgumentParser):
                             help="path to output file"
                                  " (default: display to standard output)"
                             )
+        output.add_argument('--location',
+                            type=str,
+                            default=None,
+                            metavar='FILE',
+                            help="path to location file"
+                                 " (default: Localiton.csv in the same"
+                                 " directory of source fil)"
+                            )
 
         # graph values
         fileformat = self.add_argument_group('format options')

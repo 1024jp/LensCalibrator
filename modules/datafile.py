@@ -16,11 +16,12 @@ FIND_LEVEL = 3  # number of parent directories to find in.
 
 
 class Data:
-    def __init__(self, datafile, in_cols=None, out_cols=None):
+    def __init__(self, datafile, loc_path=None, in_cols=None, out_cols=None):
         """Initialize Data object.
 
         Arguments:
         datafile (file) -- main data file in file-like object form.
+        loc_path (str) -- path to location file or None for default path.
         in_cols (int, int) -- column indexes of x,y coordinates in datafile.
         out_cols (int, int) -- column indexes of x,y coordinates for calibrated
                                data.
@@ -30,7 +31,7 @@ class Data:
         self.dirpath = os.path.dirname(datafile.name)
 
         # load Loc file
-        self.loc_path = self._find_file(LOC_FILENAME)[0]
+        self.loc_path = loc_path or self._find_file(LOC_FILENAME)[0]
         image_points, dest_points = self._load_location()
         self.image_points = image_points
         self.dest_points = dest_points
