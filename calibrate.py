@@ -21,8 +21,7 @@ from modules.projection import Projector
 DEFAULT_IMAGE_SIZE = (3840, 2160)
 
 
-def main(datafile, outfile, size=DEFAULT_IMAGE_SIZE, in_cols=None):
-    data = Data(datafile, in_cols=in_cols)
+def main(data, outfile, size=DEFAULT_IMAGE_SIZE):
     undistorter = Undistorter(data.image_points, data.dest_points, size)
     undistorded_refpoints = undistorter.calibrate_points(data.image_points)
     projector = Projector(undistorded_refpoints.tolist(),
@@ -35,8 +34,7 @@ def main(datafile, outfile, size=DEFAULT_IMAGE_SIZE, in_cols=None):
     data.process_coordinates(processor_handler, outfile)
 
 
-def undistort(datafile, outfile, size=DEFAULT_IMAGE_SIZE, in_cols=None):
-    data = Data(datafile, in_cols=in_cols)
+def undistort(data, outfile, size=DEFAULT_IMAGE_SIZE):
     undistorter = Undistorter(data.image_points, data.dest_points, size)
 
     # process data file
@@ -45,8 +43,7 @@ def undistort(datafile, outfile, size=DEFAULT_IMAGE_SIZE, in_cols=None):
     data.process_coordinates(processor_handler, outfile)
 
 
-def project(datafile, outfile, in_cols=None):
-    data = Data(datafile, in_cols=in_cols)
+def project(data, outfile):
     projector = Projector(data.image_points, data.dest_points)
 
     # process data file
@@ -65,7 +62,8 @@ class TestCase(unittest.TestCase):
         resultpath = os.path.join(test_dir, result_filename)
 
         out = io.BytesIO()
-        project(open(filepath, 'rU'), out)
+        data = Data(open(filepath, 'rU'))
+        project(data, out)
         result = out.getvalue()
         expected_result = open(resultpath).read()
 
@@ -80,7 +78,8 @@ class TestCase(unittest.TestCase):
         resultpath = os.path.join(test_dir,  result_filename)
 
         out = io.BytesIO()
-        undistort(open(filepath, 'rU'), out, size=(3840, 2160))
+        data = Data(open(filepath, 'rU'))
+        undistort(data, out, size=(3840, 2160))
         result = out.getvalue()
         expected_result = open(resultpath).read()
 
@@ -97,7 +96,8 @@ if __name__ == "__main__":
         suite = unittest.TestLoader().loadTestsFromTestCase(TestCase)
         unittest.TextTestRunner().run(suite)
         sys.exit()
-
-    main(args.file, args.out, args.size, args.in_cols)
-#     undistort(args.file, args.out, args.size, args.in_cols)
-#     project(args.file, args.out, args.in_cols)
+    
+    data = Data(args.file, in_cols=args.in_cols)
+    main(data, args.out, args.size)
+#     undistort(data, args.out, args.size)
+#     project(data, args.out)
