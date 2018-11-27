@@ -57,7 +57,7 @@ class Parser(argparse.ArgumentParser):
                             type=argparse.FileType('w'),
                             default=sys.stdout,
                             metavar='FILE',
-                            help="set path to output file"
+                            help="path to output file"
                                  " (default: display to standard output)"
                             )
 
@@ -68,7 +68,7 @@ class Parser(argparse.ArgumentParser):
                                 nargs=2,
                                 default=(3840, 2160),
                                 metavar=('WIDTH', 'HEIGHT'),
-                                help=("set dimension of the image"
+                                help=("dimension of the image"
                                       " (default: %(default)s)")
                                 )
         fileformat.add_argument('--in_cols',
@@ -76,7 +76,7 @@ class Parser(argparse.ArgumentParser):
                                 nargs=2,
                                 default=[2, 3],
                                 metavar='INDEX',
-                                help=("set column positions of x, y in file "
+                                help=("column positions of x, y in file "
                                       " (default: %(default)s)")
                                 )
         fileformat.add_argument('--out_cols',
@@ -84,7 +84,7 @@ class Parser(argparse.ArgumentParser):
                                 nargs=2,
                                 default=None,
                                 metavar='INDEX',
-                                help=("set column positions of x, y in file for"
+                                help=("column positions of x, y in file for"
                                       " calibrated data"
                                       " (default: same as in_cols")
                                 )
