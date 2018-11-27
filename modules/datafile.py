@@ -2,7 +2,7 @@
 """
 Datafile object for tracklog and Loc file.
 
-(C) 2016-2017 1024jp
+(C) 2016-2018 1024jp
 """
 
 import csv
@@ -16,12 +16,11 @@ FIND_LEVEL = 3  # number of parent directories to find in.
 
 
 class Data:
-    def __init__(self, datafile, z=None, in_cols=None, out_cols=None):
+    def __init__(self, datafile, in_cols=None, out_cols=None):
         """Initialize Data object.
 
         Arguments:
         datafile (file) -- main data file in file-like object form.
-        z_filter (int) -- Z-axis in destination points to obtain.
         in_cols (int, int) -- column indexes of x,y coordinates in datafile.
         out_cols (int, int) -- column indexes of x,y coordinates for calibrated
                                data.
@@ -32,7 +31,7 @@ class Data:
 
         # load Loc file
         self.loc_path = self._find_file(LOC_FILENAME)[0]
-        image_points, dest_points = self._load_location(z_filter=z)
+        image_points, dest_points = self._load_location()
         self.image_points = image_points
         self.dest_points = dest_points
 
@@ -59,7 +58,7 @@ class Data:
 
         return paths
 
-    def _load_location(self, z_filter=None):
+    def _load_location(self):
         """Load location definition file.
 
         Returns:
@@ -79,8 +78,6 @@ class Data:
                 row = list(map(float, row))
                 image_point = row[3:5]
                 dest_point = row[0:3]
-                if z_filter and dest_point[2] != z_filter:
-                    continue
                 image_points.append(image_point)
                 dest_points.append(dest_point[0:2])
 

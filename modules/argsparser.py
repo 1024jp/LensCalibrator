@@ -2,7 +2,7 @@
 
 """Command line arguments parser.
 
-(C) 2016 1024jp
+(C) 2016-2018 1024jp
 """
 
 import argparse
@@ -87,12 +87,6 @@ class Parser(argparse.ArgumentParser):
                                 help=("set column positions of x, y in file for"
                                       " calibrated data"
                                       " (default: same as in_cols")
-                                )
-        fileformat.add_argument('-z',
-                                type=int,
-                                default=None,
-                                help=("z-axis in destination points to obtain"
-                                      " (default: %(default)s)")
                                 )
 
     @property

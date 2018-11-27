@@ -2,7 +2,7 @@
 """
 Remove distortion of camera lens and project to the real world coordinates.
 
-(C) 2016-2017 1024jp
+(C) 2016-2018 1024jp
 """
 
 import io
@@ -21,8 +21,8 @@ from modules.projection import Projector
 DEFAULT_IMAGE_SIZE = (3840, 2160)
 
 
-def main(datafile, outfile, size=DEFAULT_IMAGE_SIZE, z=None, in_cols=None):
-    data = Data(datafile, z=z, in_cols=in_cols)
+def main(datafile, outfile, size=DEFAULT_IMAGE_SIZE, in_cols=None):
+    data = Data(datafile, in_cols=in_cols)
     undistorter = Undistorter(data.image_points, data.dest_points, size)
     undistorded_refpoints = undistorter.calibrate_points(data.image_points)
     projector = Projector(undistorded_refpoints.tolist(),
@@ -35,8 +35,8 @@ def main(datafile, outfile, size=DEFAULT_IMAGE_SIZE, z=None, in_cols=None):
     data.process_coordinates(processor_handler, outfile)
 
 
-def undistort(datafile, outfile, size=DEFAULT_IMAGE_SIZE, z=None, in_cols=None):
-    data = Data(datafile, z=z, in_cols=in_cols)
+def undistort(datafile, outfile, size=DEFAULT_IMAGE_SIZE, in_cols=None):
+    data = Data(datafile, in_cols=in_cols)
     undistorter = Undistorter(data.image_points, data.dest_points, size)
 
     # process data file
@@ -45,8 +45,8 @@ def undistort(datafile, outfile, size=DEFAULT_IMAGE_SIZE, z=None, in_cols=None):
     data.process_coordinates(processor_handler, outfile)
 
 
-def project(datafile, outfile, z=None, in_cols=None):
-    data = Data(datafile, z=z, in_cols=in_cols)
+def project(datafile, outfile, in_cols=None):
+    data = Data(datafile, in_cols=in_cols)
     projector = Projector(data.image_points, data.dest_points)
 
     # process data file
@@ -98,6 +98,6 @@ if __name__ == "__main__":
         unittest.TextTestRunner().run(suite)
         sys.exit()
 
-    main(args.file, args.out, args.size, args.z, args.in_cols)
-#     undistort(args.file, args.out, args.size, args.z, args.in_cols)
-#     project(args.file, args.out, args.z, args.in_cols)
+    main(args.file, args.out, args.size, args.in_cols)
+#     undistort(args.file, args.out, args.size, args.in_cols)
+#     project(args.file, args.out, args.in_cols)
