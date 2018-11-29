@@ -60,7 +60,9 @@ class Parser(argparse.ArgumentParser):
                             help="path to output file"
                                  " (default: display to standard output)"
                             )
-        output.add_argument('--location',
+
+        input_ = self.add_argument_group('input options')
+        input_.add_argument('--location',
                             type=str,
                             default=None,
                             metavar='FILE',
