@@ -108,7 +108,7 @@ class Data:
                 try:
                     x = float(row[in_cols[0]])
                     y = float(row[in_cols[1]])
-                except:  # go to next column if not number
+                except ValueError:  # go to next column if not number
                     writer.writerow(new_row)
                     continue
 
