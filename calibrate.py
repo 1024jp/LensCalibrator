@@ -25,7 +25,8 @@ def main(data, outfile, camera_path=None, size=DEFAULT_IMAGE_SIZE):
     if camerafile:
         undistorter = Undistorter.load(camera_path)
     else:
-        undistorter = Undistorter.init(data.image_points, data.dest_points, size)
+        undistorter = Undistorter.init(data.image_points, data.dest_points,
+                                       size)
     undistorded_refpoints = undistorter.calibrate_points(data.image_points)
     projector = Projector(undistorded_refpoints.tolist(),
                           data.dest_points)
@@ -105,7 +106,7 @@ if __name__ == "__main__":
         suite = unittest.TestLoader().loadTestsFromTestCase(TestCase)
         unittest.TextTestRunner().run(suite)
         sys.exit()
-    
+
     data = Data(args.file, loc_path=args.location, in_cols=args.in_cols)
     main(data, args.out, args.camera, args.size)
 #     undistort(data, args.out, args.size)

@@ -11,7 +11,7 @@ import os
 
 # constants
 LOC_FILENAME = "Location.csv"
-DEFAULT_INPUT_COLUMNS = (2,3)
+DEFAULT_INPUT_COLUMNS = (2, 3)
 FIND_LEVEL = 3  # number of parent directories to find in.
 
 
@@ -92,8 +92,8 @@ class Data:
 
     def process_coordinates(self, processor_handler, output):
         in_cols = self.in_cols
-        out_cols= self.out_cols
-        
+        out_cols = self.out_cols
+
         with open(self.datafile.name) as file_in:
             # detect delimiter
             dialect = csv.Sniffer().sniff(file_in.read(2048), delimiters=',\t')

@@ -12,7 +12,7 @@ import sys
 
 try:
     from . import __version__ as version
-except:
+except ImportError:
     version = 'n/a'
 
 
