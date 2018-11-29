@@ -5,6 +5,8 @@
 (C) 2007-2017 1024jp
 """
 
+import pickle
+
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -37,6 +39,15 @@ class Undistorter:
         self.__get_new_camera_matrix()
 
         return self
+
+    @classmethod
+    def load(cls, path):
+        with open(path, mode='rb') as f:
+            return pickle.load(path)
+
+    def save(self, path):
+        with open(path + '.pckl', 'wb') as f:
+            data = pickle.dump(self, f)
 
     def calibrate_points(self, points):
         return cv2.undistortPoints(np.array([points]), self.camera_matrix,
