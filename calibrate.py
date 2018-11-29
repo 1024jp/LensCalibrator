@@ -21,8 +21,11 @@ from modules.projection import Projector
 DEFAULT_IMAGE_SIZE = (3840, 2160)
 
 
-def main(data, outfile, size=DEFAULT_IMAGE_SIZE):
-    undistorter = Undistorter.init(data.image_points, data.dest_points, size)
+def main(data, outfile, camera_path=None, size=DEFAULT_IMAGE_SIZE):
+    if camerafile:
+        undistorter = Undistorter.load(camera_path)
+    else:
+        undistorter = Undistorter.init(data.image_points, data.dest_points, size)
     undistorded_refpoints = undistorter.calibrate_points(data.image_points)
     projector = Projector(undistorded_refpoints.tolist(),
                           data.dest_points)
@@ -34,7 +37,7 @@ def main(data, outfile, size=DEFAULT_IMAGE_SIZE):
     data.process_coordinates(processor_handler, outfile)
 
 
-def undistort(data, outfile, size=DEFAULT_IMAGE_SIZE):
+def undistort(data, outfile, camerafile=None, size=DEFAULT_IMAGE_SIZE):
     undistorter = Undistorter.init(data.image_points, data.dest_points, size)
 
     # process data file
@@ -104,6 +107,6 @@ if __name__ == "__main__":
         sys.exit()
     
     data = Data(args.file, loc_path=args.location, in_cols=args.in_cols)
-    main(data, args.out, args.size)
+    main(data, args.out, args.camera, args.size)
 #     undistort(data, args.out, args.size)
 #     project(data, args.out)

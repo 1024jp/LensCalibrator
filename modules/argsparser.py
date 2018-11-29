@@ -70,6 +70,13 @@ class Parser(argparse.ArgumentParser):
                                  " (default: Localiton.csv in the same"
                                  " directory of source fil)"
                             )
+        input_.add_argument('--camera',
+                            type=str,
+                            default=None,
+                            metavar='FILE',
+                            help="path to camera model file for undistortion"
+                                 " (default: points in source file are used)"
+                            )
 
         # graph values
         fileformat = self.add_argument_group('format options')
