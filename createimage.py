@@ -134,7 +134,7 @@ def main(data, saves_file=False, removes_perspective=True, shows_stats=False):
     image = cv2.imread(imgpath)
     size = image.shape[::-1][1:3]
 
-    undistorter = Undistorter(data.image_points, data.dest_points, size)
+    undistorter = Undistorter.init(data.image_points, data.dest_points, size)
 
     image = undistorter.undistort_image(image)
     undistorted_points = undistorter.calibrate_points(data.image_points)

@@ -25,7 +25,7 @@ def main(data, size):
     data (Data) -- Data source instance.
     size (int, int) -- Width and height of source image.
     """
-    undistorter = Undistorter(data.image_points, data.dest_points, size)
+    undistorter = Undistorter.init(data.image_points, data.dest_points, size)
     undistorter.show_map()
 
 

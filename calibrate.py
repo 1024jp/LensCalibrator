@@ -22,7 +22,7 @@ DEFAULT_IMAGE_SIZE = (3840, 2160)
 
 
 def main(data, outfile, size=DEFAULT_IMAGE_SIZE):
-    undistorter = Undistorter(data.image_points, data.dest_points, size)
+    undistorter = Undistorter.init(data.image_points, data.dest_points, size)
     undistorded_refpoints = undistorter.calibrate_points(data.image_points)
     projector = Projector(undistorded_refpoints.tolist(),
                           data.dest_points)
@@ -35,7 +35,7 @@ def main(data, outfile, size=DEFAULT_IMAGE_SIZE):
 
 
 def undistort(data, outfile, size=DEFAULT_IMAGE_SIZE):
-    undistorter = Undistorter(data.image_points, data.dest_points, size)
+    undistorter = Undistorter.init(data.image_points, data.dest_points, size)
 
     # process data file
     def processor_handler(x, y):
