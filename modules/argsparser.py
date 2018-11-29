@@ -6,6 +6,7 @@
 """
 
 import argparse
+import io
 import logging
 import os
 import sys
@@ -148,8 +149,8 @@ def display(args):
     """Display input arguments for test use.
     """
     print('[arguments]')
-    for key, arg in vars(args).iteritems():
-        if isinstance(arg, file):
+    for key, arg in vars(args).items():
+        if isinstance(arg, io.IOBase):
             arg = arg.name
         print('    {:10s} {}'.format(key + ':', arg))
 
