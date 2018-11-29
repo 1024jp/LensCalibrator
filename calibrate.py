@@ -61,11 +61,14 @@ class TestCase(unittest.TestCase):
         filepath = os.path.join(test_dir, 'tracklog.tsv')
         resultpath = os.path.join(test_dir, result_filename)
 
-        out = io.BytesIO()
-        data = Data(open(filepath, 'rU'))
+        out = io.StringIO()
+        with open(filepath, 'r') as f:
+            data = Data(f)
         project(data, out)
         result = out.getvalue()
-        expected_result = open(resultpath).read()
+
+        with open(resultpath) as f:
+            expected_result = f.read()
 
         for line, expected_line in zip(result.splitlines(),
                                        expected_result.splitlines()):
@@ -77,11 +80,14 @@ class TestCase(unittest.TestCase):
         filepath = os.path.join(test_dir, 'tracklog.tsv')
         resultpath = os.path.join(test_dir,  result_filename)
 
-        out = io.BytesIO()
-        data = Data(open(filepath, 'rU'))
+        out = io.StringIO()
+        with open(filepath, 'r') as f:
+            data = Data(f)
         undistort(data, out, size=(3840, 2160))
+
         result = out.getvalue()
-        expected_result = open(resultpath).read()
+        with open(resultpath) as f:
+            expected_result = f.read()
 
         for line, expected_line in zip(result.splitlines(),
                                        expected_result.splitlines()):
