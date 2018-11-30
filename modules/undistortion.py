@@ -46,7 +46,7 @@ class Undistorter:
             return pickle.load(path)
 
     def save(self, path):
-        with open(path + '.pckl', 'wb') as f:
+        with open(path, 'wb') as f:
             pickle.dump(self, f)
 
     def calibrate_points(self, points):
