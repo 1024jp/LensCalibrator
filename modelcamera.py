@@ -23,7 +23,7 @@ SUBPIXEL_CRITERIA = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER,
                      30, 0.001)
 
 
-def main(imgdir_path, out_path, chessboard_corners):
+def main(imgdir_path, out_path, chessboard_corners, displays=False):
     """
     Arguments:
     imgdir_path (str) -- path to the directory containing image files.
@@ -66,8 +66,9 @@ def main(imgdir_path, out_path, chessboard_corners):
         # display detection result
         img = cv2.drawChessboardCorners(
                 img, chessboard_corners, corners, found)
-#         cv2.imshow('Chessboard', img)
-#         cv2.waitKey(0)  # wait for key press
+        if displays:
+            cv2.imshow('Chessboard', img)
+            cv2.waitKey(0)  # wait for key press
 
     # destroy any open CV windows
     cv2.destroyAllWindows()
@@ -127,10 +128,16 @@ def parse_args():
                          help=("number of corners in chessboard"
                                " (default: %(default)s)")
                          )
+    options.add_argument('-d', '--display',
+                         type=bool,
+                         default=False,
+                         help=("whether display the processing image"
+                               " (default: %(default)s)")
+                         )
 
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_args()
-    main(args.imgdir_path, args.out_file, args.corners)
+    main(args.imgdir_path, args.out_file, args.corners, args.display)
