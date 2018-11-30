@@ -19,26 +19,27 @@ from modules.undistortion import Undistorter
 
 
 # consts
-SUBPIXEL_CRITERIA = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER,
-                     30, 0.001)
+SUBPIXEL_OPTIONS = {
+    'winSize': (11, 11),
+    'zeroZone': (-1, -1),
+    'criteria': (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, .001),
+}
 
 
-def main(imgdir_path, out_path, chessboard_corners, displays=False):
+def main(imgdir_path, out_path, chessboard_size, displays=False):
     """
     Arguments:
     imgdir_path (str) -- path to the directory containing image files.
     out_path (str) -- path for camera model to pickle.
-    chessboard_corners (int, int) -- (row, col)
+    chessboard_size (int, int) -- number of inner corners in the chessboard
     """
-    obj_points = []  # 3D point in real world space
-    img_points = []  # 2D point in image plane
-
     # grab a set of chessboard images taken with the camera to calibrate
     image_paths = glob(os.path.join(imgdir_path, '*.jpg'))
     if not image_paths:
         sys.exit("Calibration failed. No images of chessboards were found.")
 
     # detect images
+    img_points = []  # 2D point in image plane
     image_size = None
     for image_path in image_paths:
         # load image
@@ -48,44 +49,40 @@ def main(imgdir_path, out_path, chessboard_corners, displays=False):
             image_size = gray.shape[::-1]
 
         # find chessboard in the image
-        found, corners = cv2.findChessboardCorners(
-                gray, chessboard_corners, None)
+        found, corners = cv2.findChessboardCorners(gray, chessboard_size, None)
 
         if found:
             # enhance corner accuracy
             corners = cv2.cornerSubPix(
                     image=gray,
                     corners=corners,
-                    winSize=(11, 11),
-                    zeroZone=(-1, -1),
-                    criteria=SUBPIXEL_CRITERIA)
+                    **SUBPIXEL_OPTIONS)
 
             # store result
             img_points.append(corners)
 
         # display detection result
-        img = cv2.drawChessboardCorners(
-                img, chessboard_corners, corners, found)
+        img = cv2.drawChessboardCorners(img, chessboard_size, corners, found)
         if displays:
             cv2.imshow('Chessboard', img)
             cv2.waitKey(0)  # wait for key press
 
     # destroy any open CV windows
-    cv2.destroyAllWindows()
+    if displays:
+        cv2.destroyAllWindows()
 
     # exit on failures
     if not img_points:
         sys.exit("Calibration failed. No chessboards were detected.")
 
-    # theoretical object points for the chessboard that will come out like:
+    # theoretical 3D object points for the chessboard that will come out like:
     #     (0, 0, 0), (1, 0, 0), ...,
-    #     (chessboard_corners[0]-1, chessboard_corners[1]-1, 0)
-    objp = numpy.zeros((chessboard_corners[0]*chessboard_corners[1], 3),
+    #     (chessboard_size[0]-1, chessboard_size[1]-1, 0)
+    objp = numpy.zeros((chessboard_size[0]*chessboard_size[1], 3),
                        numpy.float32)
-    objp[:, :2] = numpy.mgrid[0:chessboard_corners[0],
-                              0:chessboard_corners[1]].T.reshape(-1, 2)
-    for _ in img_points:
-        obj_points.append(objp)
+    objp[:, :2] = numpy.mgrid[0:chessboard_size[0],
+                              0:chessboard_size[1]].T.reshape(-1, 2)
+    obj_points = [objp] * len(img_points)
 
     # create calibration model
     _, camera_matrix, dist_coeffs, rvecs, tvecs = cv2.calibrateCamera(
@@ -125,7 +122,7 @@ def parse_args():
                          nargs=2,
                          default=(10, 7),
                          metavar=('LOW', 'COL'),
-                         help=("number of corners in chessboard"
+                         help=("number of inner corners in chessboard"
                                " (default: %(default)s)")
                          )
     options.add_argument('-d', '--display',
