@@ -2,7 +2,7 @@
 """
 
 
-(C) 2007-2017 1024jp
+(C) 2007-2018 1024jp
 """
 
 import pickle
@@ -25,7 +25,10 @@ class Undistorter:
         self.rvecs = rvecs
         self.tvecs = tvecs
         self.image_size = image_size
-        self.new_camera_matrix = new_camera_matrix
+        if new_camera_matrix:
+            self.new_camera_matrix = new_camera_matrix
+        else:
+            self.__get_new_camera_matrix()
 
     @classmethod
     def init(cls, image_points, dest_points, image_size):
@@ -35,10 +38,7 @@ class Undistorter:
                 [np.float32([image_points])],
                 image_size, None, None, flags=_flags)
 
-        self = cls(camera_matrix, dist_coeffs, rvecs, tvecs, image_size)
-        self.__get_new_camera_matrix()
-
-        return self
+        return cls(camera_matrix, dist_coeffs, rvecs, tvecs, image_size)
 
     @classmethod
     def load(cls, path):
