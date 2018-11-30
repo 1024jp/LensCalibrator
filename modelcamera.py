@@ -7,6 +7,7 @@ usage:
     python modelcamera.py image_dir_path out_path
 """
 
+import argparse
 import os
 import sys
 from glob import glob
@@ -22,7 +23,7 @@ SUBPIXEL_CRITERIA = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER,
                      30, 0.001)
 
 
-def main(imgdir_path, out_path='camera.pckl', chessboard_corners=(10, 7)):
+def main(imgdir_path, out_path, chessboard_corners):
     """
     Arguments:
     imgdir_path (str) -- path to the directory containing image files.
@@ -98,5 +99,38 @@ def main(imgdir_path, out_path='camera.pckl', chessboard_corners=(10, 7)):
     camera.save(out_path)
 
 
+def parse_args():
+    """Parse command-line arguments.
+    """
+    parser = argparse.ArgumentParser(
+            description='Create camera model from chessboard images.')
+
+    # argument
+    parser.add_argument('imgdir_path',
+                        type=str,
+                        metavar='DIR_PATH',
+                        help="path to the directory containing image files"
+                        )
+    parser.add_argument('out_file',
+                        type=argparse.FileType('wb'),
+                        metavar='FILE',
+                        help="path for camera model to pickle"
+                        )
+
+    # optional arguments
+    options = parser.add_argument_group('chessboard options')
+    options.add_argument('-c', '--corners',
+                         type=int,
+                         nargs=2,
+                         default=(10, 7),
+                         metavar=('LOW', 'COL'),
+                         help=("number of corners in chessboard"
+                               " (default: %(default)s)")
+                         )
+
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    main(*sys.argv[1:])
+    args = parse_args()
+    main(args.imgdir_path, args.out_file, args.corners)

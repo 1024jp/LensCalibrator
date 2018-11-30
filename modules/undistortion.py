@@ -45,9 +45,8 @@ class Undistorter:
         with open(path, mode='rb') as f:
             return pickle.load(path)
 
-    def save(self, path):
-        with open(path, 'wb') as f:
-            pickle.dump(self, f)
+    def save(self, f):
+        pickle.dump(self, f)
 
     def calibrate_points(self, points):
         return cv2.undistortPoints(np.array([points]), self.camera_matrix,
