@@ -64,6 +64,8 @@ def main(imgdir_path, out_path, chessboard_size, displays=False):
         # display detection result
         img = cv2.drawChessboardCorners(img, chessboard_size, corners, found)
         if displays:
+            display_size = tuple([int(l / 2) for l in image_size])
+            img = cv2.resize(img, display_size)
             cv2.imshow('Chessboard', img)
             cv2.waitKey(0)  # wait for key press
 
@@ -126,7 +128,7 @@ def parse_args():
                                " (default: %(default)s)")
                          )
     options.add_argument('-d', '--display',
-                         type=bool,
+                          action='store_true',
                          default=False,
                          help=("whether display the processing image"
                                " (default: %(default)s)")
