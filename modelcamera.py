@@ -1,10 +1,7 @@
 #!/usr/bin/env python
-"""Create camera model using chessboard images.
+"""Create camera model from chessboard images.
 
 (C) 2018 1024jp
-
-usage:
-    python modelcamera.py image_dir_path out_path
 """
 
 import argparse
@@ -27,7 +24,8 @@ SUBPIXEL_OPTIONS = {
 
 
 def main(imgdir_path, out_path, chessboard_size, displays=False):
-    """
+    """Create camera model from chessboard images and pickle the model.
+
     Arguments:
     imgdir_path (str) -- path to the directory containing image files.
     out_path (str) -- path for camera model to pickle.
@@ -101,6 +99,9 @@ def main(imgdir_path, out_path, chessboard_size, displays=False):
 
 def parse_args():
     """Parse command-line arguments.
+
+    Returns:
+    args (Namespace) -- namespace object contains parsed arguments
     """
     parser = argparse.ArgumentParser(
             description='Create camera model from chessboard images.')
@@ -128,7 +129,7 @@ def parse_args():
                                " (default: %(default)s)")
                          )
     options.add_argument('-d', '--display',
-                          action='store_true',
+                         action='store_true',
                          default=False,
                          help=("whether display the processing image"
                                " (default: %(default)s)")
