@@ -18,14 +18,19 @@ class ArgsParser(argsparser.Parser):
     datafile_name = 'location'
 
 
-def main(data, size):
+def main(data, camera_path=None, size):
     """Display potential map for given location file.
 
     Arguments:
     data (Data) -- Data source instance.
+    camera_path (str) -- Path to a camera model or None.
     size (int, int) -- Width and height of source image.
     """
-    undistorter = Undistorter.init(data.image_points, data.dest_points, size)
+    if camerafile:
+        undistorter = Undistorter.load(camera_path)
+    else:
+        undistorter = Undistorter.init(data.image_points, data.dest_points,
+                                       size)
     undistorter.show_map()
 
 

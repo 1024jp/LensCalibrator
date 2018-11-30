@@ -39,7 +39,11 @@ def main(data, outfile, camera_path=None, size=DEFAULT_IMAGE_SIZE):
 
 
 def undistort(data, outfile, camerafile=None, size=DEFAULT_IMAGE_SIZE):
-    undistorter = Undistorter.init(data.image_points, data.dest_points, size)
+    if camerafile:
+        undistorter = Undistorter.load(camera_path)
+    else:
+        undistorter = Undistorter.init(data.image_points, data.dest_points,
+                                       size)
 
     # process data file
     def processor_handler(x, y):
