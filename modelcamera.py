@@ -13,6 +13,7 @@ import cv2
 import numpy
 
 from modules.undistortion import Undistorter
+from modules.stdout import Style
 
 
 # consts
@@ -59,6 +60,14 @@ def main(imgdir_path, out_path, chessboard_size, displays=False):
             # store result
             img_points.append(corners)
 
+        # display result to stdout
+        filename = os.path.basename(image_path)
+        if found:
+            mark = Style.OK + '✔' + Style.END
+        else:
+            mark = Style.FAIL + '━' + Style.END
+        print("{} {}".format(mark, filename))
+
         # display detection result
         img = cv2.drawChessboardCorners(img, chessboard_size, corners, found)
         if displays:
@@ -95,6 +104,12 @@ def main(imgdir_path, out_path, chessboard_size, displays=False):
     # pickle
     camera = Undistorter(camera_matrix, dist_coeffs, rvecs, tvecs, image_size)
     camera.save(out_path)
+
+    # display result to stdout
+    print("Found {} chessboards in total {} images.".format(
+            Style.BOLD + str(len(img_points)) + Style.END,
+            Style.BOLD + str(len(image_paths)) + Style.END
+    ))
 
 
 def parse_args():
