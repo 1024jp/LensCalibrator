@@ -2,7 +2,7 @@
 """
 
 
-(C) 2007-2017 1024jp
+(C) 2007-2018 1024jp
 """
 
 import numpy as np
@@ -26,7 +26,6 @@ class Projector:
         """Project x, y coordinates using homography matrix.
 
         Arguments:
-        homography (list[list[float]]) -- 3x3 homography matrix.
         x (float) -- x coordinate to project.
         y (float) -- y coordinate to project.
         """
