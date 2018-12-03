@@ -96,7 +96,7 @@ class Data:
 
         with open(self.datafile.name) as file_in:
             # detect delimiter
-            dialect = csv.Sniffer().sniff(file_in.read(2048), delimiters=',\t')
+            dialect = csv.Sniffer().sniff(file_in.readline(), delimiters=',\t')
             file_in.seek(0)
 
             reader = csv.reader(file_in, dialect)
