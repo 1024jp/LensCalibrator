@@ -10,15 +10,16 @@ import cv2
 
 
 class Projector:
-    def __init__(self, image_points, ideal_points):
-        self.homography = self._estimate_homography(image_points, ideal_points)
+    def __init__(self, image_points, dest_points):
+        dest_points = [p[0:2] for p in dest_points]
+        self.homography = self._estimate_homography(image_points, dest_points)
 
     @staticmethod
-    def _estimate_homography(image_points, ideal_points):
+    def _estimate_homography(image_points, dest_points):
         """Find homography matrix.
         """
         fp = np.array(image_points)
-        tp = np.array(ideal_points)
+        tp = np.array(dest_points)
         H, _ = cv2.findHomography(fp, tp, 0)
         return H
 

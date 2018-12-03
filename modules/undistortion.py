@@ -32,9 +32,9 @@ class Undistorter:
 
     @classmethod
     def init(cls, image_points, dest_points, image_size):
-        dest_3dpoints = [[x, y, 0] for x, y in dest_points]
+        dest_points = [(x, y, 0) for x, y, z in dest_points]
         _, camera_matrix, dist_coeffs, rvecs, tvecs = cv2.calibrateCamera(
-                [np.float32([dest_3dpoints])],
+                [np.float32([dest_points])],
                 [np.float32([image_points])],
                 image_size, None, None, flags=_flags)
 

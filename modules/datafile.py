@@ -64,7 +64,7 @@ class Data:
 
         Returns:
         image_points -- x,y pairs of reference points in image.
-        dest_points -- corresponding x,y pairs of ref points in field.
+        dest_points -- corresponding x,y,z pairs of ref points in field.
         """
         image_points = []
         dest_points = []
@@ -80,7 +80,7 @@ class Data:
                 image_point = row[3:5]
                 dest_point = row[0:3]
                 image_points.append(image_point)
-                dest_points.append(dest_point[0:2])
+                dest_points.append(dest_point)
 
         return image_points, dest_points
 
