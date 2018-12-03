@@ -2,7 +2,7 @@
 """
 Undistort image.
 
-(C) 2016 1024jp
+(C) 2016-2018 1024jp
 """
 
 import math
@@ -129,14 +129,12 @@ def estimate_clipping_rect(projector, size):
     return rect, flipped
 
 
-def main(datafile, z=None, in_cols=None, saves_file=False,
-         removes_perspective=True, shows_stats=False):
-    data = Data(datafile, z=z, in_cols=in_cols)
+def main(data, saves_file=False, removes_perspective=True, shows_stats=False):
     imgpath = data.datafile.name
     image = cv2.imread(imgpath)
     size = image.shape[::-1][1:3]
 
-    undistorter = Undistorter(data.image_points, data.dest_points, size)
+    undistorter = Undistorter.init(data.image_points, data.dest_points, size)
 
     image = undistorter.undistort_image(image)
     undistorted_points = undistorter.calibrate_points(data.image_points)
@@ -196,5 +194,6 @@ if __name__ == "__main__":
         print("This script doesn't have test.")
         sys.exit()
 
-    main(args.file, z=args.z, in_cols=args.in_cols, saves_file=args.save,
+    data = Data(args.file, in_cols=args.in_cols)
+    main(data, saves_file=args.save,
          removes_perspective=args.perspective, shows_stats=args.stats)

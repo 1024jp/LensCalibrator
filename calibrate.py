@@ -2,7 +2,7 @@
 """
 Remove distortion of camera lens and project to the real world coordinates.
 
-(C) 2016-2017 1024jp
+(C) 2016-2018 1024jp
 """
 
 import io
@@ -21,9 +21,12 @@ from modules.projection import Projector
 DEFAULT_IMAGE_SIZE = (3840, 2160)
 
 
-def main(datafile, outfile, size=DEFAULT_IMAGE_SIZE, z=None, in_cols=None):
-    data = Data(datafile, z=z, in_cols=in_cols)
-    undistorter = Undistorter(data.image_points, data.dest_points, size)
+def main(data, outfile, camera_path=None, size=DEFAULT_IMAGE_SIZE):
+    if camerafile:
+        undistorter = Undistorter.load(camera_path)
+    else:
+        undistorter = Undistorter.init(data.image_points, data.dest_points,
+                                       size)
     undistorded_refpoints = undistorter.calibrate_points(data.image_points)
     projector = Projector(undistorded_refpoints.tolist(),
                           data.dest_points)
@@ -35,9 +38,12 @@ def main(datafile, outfile, size=DEFAULT_IMAGE_SIZE, z=None, in_cols=None):
     data.process_coordinates(processor_handler, outfile)
 
 
-def undistort(datafile, outfile, size=DEFAULT_IMAGE_SIZE, z=None, in_cols=None):
-    data = Data(datafile, z=z, in_cols=in_cols)
-    undistorter = Undistorter(data.image_points, data.dest_points, size)
+def undistort(data, outfile, camerafile=None, size=DEFAULT_IMAGE_SIZE):
+    if camerafile:
+        undistorter = Undistorter.load(camera_path)
+    else:
+        undistorter = Undistorter.init(data.image_points, data.dest_points,
+                                       size)
 
     # process data file
     def processor_handler(x, y):
@@ -45,8 +51,7 @@ def undistort(datafile, outfile, size=DEFAULT_IMAGE_SIZE, z=None, in_cols=None):
     data.process_coordinates(processor_handler, outfile)
 
 
-def project(datafile, outfile, z=None, in_cols=None):
-    data = Data(datafile, z=z, in_cols=in_cols)
+def project(data, outfile):
     projector = Projector(data.image_points, data.dest_points)
 
     # process data file
@@ -64,10 +69,14 @@ class TestCase(unittest.TestCase):
         filepath = os.path.join(test_dir, 'tracklog.tsv')
         resultpath = os.path.join(test_dir, result_filename)
 
-        out = io.BytesIO()
-        project(open(filepath, 'rU'), out)
+        out = io.StringIO()
+        with open(filepath, 'r') as f:
+            data = Data(f)
+        project(data, out)
         result = out.getvalue()
-        expected_result = open(resultpath).read()
+
+        with open(resultpath) as f:
+            expected_result = f.read()
 
         for line, expected_line in zip(result.splitlines(),
                                        expected_result.splitlines()):
@@ -79,10 +88,14 @@ class TestCase(unittest.TestCase):
         filepath = os.path.join(test_dir, 'tracklog.tsv')
         resultpath = os.path.join(test_dir,  result_filename)
 
-        out = io.BytesIO()
-        undistort(open(filepath, 'rU'), out, size=(3840, 2160))
+        out = io.StringIO()
+        with open(filepath, 'r') as f:
+            data = Data(f)
+        undistort(data, out, size=(3840, 2160))
+
         result = out.getvalue()
-        expected_result = open(resultpath).read()
+        with open(resultpath) as f:
+            expected_result = f.read()
 
         for line, expected_line in zip(result.splitlines(),
                                        expected_result.splitlines()):
@@ -98,6 +111,7 @@ if __name__ == "__main__":
         unittest.TextTestRunner().run(suite)
         sys.exit()
 
-    main(args.file, args.out, args.size, args.z, args.in_cols)
-#     undistort(args.file, args.out, args.size, args.z, args.in_cols)
-#     project(args.file, args.out, args.z, args.in_cols)
+    data = Data(args.file, loc_path=args.location, in_cols=args.in_cols)
+    main(data, args.out, args.camera, args.size)
+#     undistort(data, args.out, args.size)
+#     project(data, args.out)

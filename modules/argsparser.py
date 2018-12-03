@@ -2,17 +2,18 @@
 
 """Command line arguments parser.
 
-(C) 2016 1024jp
+(C) 2016-2018 1024jp
 """
 
 import argparse
+import io
 import logging
 import os
 import sys
 
 try:
     from . import __version__ as version
-except:
+except ImportError:
     version = 'n/a'
 
 
@@ -57,8 +58,25 @@ class Parser(argparse.ArgumentParser):
                             type=argparse.FileType('w'),
                             default=sys.stdout,
                             metavar='FILE',
-                            help="set path to output file"
+                            help="path to output file"
                                  " (default: display to standard output)"
+                            )
+
+        input_ = self.add_argument_group('input options')
+        input_.add_argument('--location',
+                            type=str,
+                            default=None,
+                            metavar='FILE',
+                            help="path to location file"
+                                 " (default: Localiton.csv in the same"
+                                 " directory of source fil)"
+                            )
+        input_.add_argument('--camera',
+                            type=str,
+                            default=None,
+                            metavar='FILE',
+                            help="path to camera model file for undistortion"
+                                 " (default: points in source file are used)"
                             )
 
         # graph values
@@ -68,7 +86,7 @@ class Parser(argparse.ArgumentParser):
                                 nargs=2,
                                 default=(3840, 2160),
                                 metavar=('WIDTH', 'HEIGHT'),
-                                help=("set dimension of the image"
+                                help=("dimension of the image"
                                       " (default: %(default)s)")
                                 )
         fileformat.add_argument('--in_cols',
@@ -76,7 +94,7 @@ class Parser(argparse.ArgumentParser):
                                 nargs=2,
                                 default=[2, 3],
                                 metavar='INDEX',
-                                help=("set column positions of x, y in file "
+                                help=("column positions of x, y in file "
                                       " (default: %(default)s)")
                                 )
         fileformat.add_argument('--out_cols',
@@ -84,15 +102,9 @@ class Parser(argparse.ArgumentParser):
                                 nargs=2,
                                 default=None,
                                 metavar='INDEX',
-                                help=("set column positions of x, y in file for"
+                                help=("column positions of x, y in file for"
                                       " calibrated data"
                                       " (default: same as in_cols")
-                                )
-        fileformat.add_argument('-z',
-                                type=int,
-                                default=None,
-                                help=("z-axis in destination points to obtain"
-                                      " (default: %(default)s)")
                                 )
 
     @property
@@ -137,8 +149,8 @@ def display(args):
     """Display input arguments for test use.
     """
     print('[arguments]')
-    for key, arg in vars(args).iteritems():
-        if isinstance(arg, file):
+    for key, arg in vars(args).items():
+        if isinstance(arg, io.IOBase):
             arg = arg.name
         print('    {:10s} {}'.format(key + ':', arg))
 

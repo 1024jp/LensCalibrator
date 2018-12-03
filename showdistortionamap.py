@@ -2,7 +2,7 @@
 """
 Display how the undistorter converts coordinates visibly.
 
-(C) 2016 1024jp
+(C) 2016-2018 1024jp
 """
 
 import os
@@ -18,15 +18,19 @@ class ArgsParser(argsparser.Parser):
     datafile_name = 'location'
 
 
-def main(location_file, size, z=None, in_cols=None):
+def main(data, camera_path=None, size):
     """Display potential map for given location file.
 
     Arguments:
-    location_file (file) -- Location file in file-like object.
+    data (Data) -- Data source instance.
+    camera_path (str) -- Path to a camera model or None.
     size (int, int) -- Width and height of source image.
     """
-    data = Data(location_file, z=z, in_cols=in_cols)
-    undistorter = Undistorter(data.image_points, data.dest_points, size)
+    if camerafile:
+        undistorter = Undistorter.load(camera_path)
+    else:
+        undistorter = Undistorter.init(data.image_points, data.dest_points,
+                                       size)
     undistorter.show_map()
 
 
@@ -37,7 +41,8 @@ def test():
     path = os.path.join(os.path.dirname(__file__), 'test', LOC_FILENAME)
     location_file = open(path, 'r')
 
-    main(location_file, (3840, 2160))
+    data = Data(open(path, 'r'))
+    main(data, (3840, 2160))
 
 
 if __name__ == "__main__":
@@ -48,4 +53,5 @@ if __name__ == "__main__":
         test()
         sys.exit()
 
-    main(args.file, args.size, args.z, in_cols=args.in_cols)
+    data = Data(args.file, in_cols=args.in_cols)
+    main(data, args.size)
