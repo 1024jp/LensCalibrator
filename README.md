@@ -47,17 +47,22 @@ optional arguments:
   -v, --verbose         display debug info to standard output (default: False)
 
 output options:
-  --out FILE            set path to output file (default: display to standard
+  --out FILE            path to output file (default: display to standard
                         output)
 
+input options:
+  --location FILE       path to location file (default: Localiton.csv in the
+                        same directory of source fil)
+  --camera FILE         path to camera model file for undistortion (default:
+                        points in source file are used)
+
 format options:
-  --size WIDTH HEIGHT   set dimension of the image (default: (3840, 2160))
+  --size WIDTH HEIGHT   dimension of the image (default: (3840, 2160))
   --in_cols INDEX INDEX
-                        set column positions of x, y in file (default: [2, 3])
+                        column positions of x, y in file (default: [2, 3])
   --out_cols INDEX INDEX
-                        set column positions of x, y in file for calibrated
-                        data (default: same as in_cols
-  -z Z                  z-axis in destination points to obtain (default: None)
+                        column positions of x, y in file for calibrated data
+                        (default: same as in_cols
 ```
 
 
