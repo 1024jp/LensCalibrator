@@ -41,9 +41,8 @@ class Undistorter:
         return cls(camera_matrix, dist_coeffs, rvecs, tvecs, image_size)
 
     @classmethod
-    def load(cls, path):
-        with open(path, mode='rb') as f:
-            return pickle.load(path)
+    def load(cls, f):
+        return pickle.load(f)
 
     def save(self, f):
         pickle.dump(self, f)

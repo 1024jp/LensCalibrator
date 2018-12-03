@@ -72,7 +72,7 @@ class Parser(argparse.ArgumentParser):
                                  " directory of source fil)"
                             )
         input_.add_argument('--camera',
-                            type=str,
+                            type=argparse.FileType('rb'),
                             default=None,
                             metavar='FILE',
                             help="path to camera model file for undistortion"

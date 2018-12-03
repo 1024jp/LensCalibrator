@@ -21,9 +21,9 @@ from modules.projection import Projector
 DEFAULT_IMAGE_SIZE = (3840, 2160)
 
 
-def main(data, outfile, camera_path=None, size=DEFAULT_IMAGE_SIZE):
+def main(data, outfile, camerafile=None, size=DEFAULT_IMAGE_SIZE):
     if camerafile:
-        undistorter = Undistorter.load(camera_path)
+        undistorter = Undistorter.load(camerafile)
     else:
         undistorter = Undistorter.init(data.image_points, data.dest_points,
                                        size)
@@ -40,7 +40,7 @@ def main(data, outfile, camera_path=None, size=DEFAULT_IMAGE_SIZE):
 
 def undistort(data, outfile, camerafile=None, size=DEFAULT_IMAGE_SIZE):
     if camerafile:
-        undistorter = Undistorter.load(camera_path)
+        undistorter = Undistorter.load(camerafile)
     else:
         undistorter = Undistorter.init(data.image_points, data.dest_points,
                                        size)
