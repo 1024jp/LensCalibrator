@@ -16,7 +16,8 @@ FIND_LEVEL = 3  # number of parent directories to find in.
 
 
 class Data:
-    def __init__(self, datafile, loc_path=None, in_cols=None, out_cols=None):
+    def __init__(self, datafile, loc_path=None, in_cols=None, out_cols=None,
+                 z_col=None):
         """Initialize Data object.
 
         Arguments:
@@ -25,6 +26,7 @@ class Data:
         in_cols (int, int) -- column indexes of x,y coordinates in datafile.
         out_cols (int, int) -- column indexes of x,y coordinates for calibrated
                                data.
+        z_col (int) -- column index of  coordinates in datafile.
         """
         # sanitize path
         self.datafile = datafile
@@ -37,7 +39,8 @@ class Data:
         self.dest_points = dest_points
 
         self.in_cols = in_cols or DEFAULT_INPUT_COLUMNS
-        self.out_cols = self.in_cols
+        self.out_cols = out_cols or self.in_cols
+        self.z_col = z_col
 
     def _find_file(self, filename, subdirectory=None):
         """Find file in the same directory and also parent directories
@@ -112,8 +115,15 @@ class Data:
                     writer.writerow(new_row)
                     continue
 
+                z = None
+                if self.z_col:
+                    try:
+                        z = float(row[self.z_col])
+                    except ValueError:
+                        pass
+
                 # translate
-                x, y = processor_handler(x, y)
+                x, y = processor_handler(x, y, z)
 
                 new_row[out_cols[0]] = int(x)
                 new_row[out_cols[1]] = int(y)
