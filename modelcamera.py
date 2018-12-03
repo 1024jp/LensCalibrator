@@ -40,7 +40,7 @@ def main(imgdir_path, out_path, chessboard_size, displays=False):
     # detect images
     img_points = []  # 2D point in image plane
     image_size = None
-    for image_path in image_paths:
+    for image_path in sorted(image_paths):
         # load image
         img = cv2.imread(image_path)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
