@@ -138,7 +138,7 @@ def parse_args():
     options.add_argument('-c', '--corners',
                          type=int,
                          nargs=2,
-                         default=(10, 7),
+                         default=(6, 9),
                          metavar=('LOW', 'COL'),
                          help=("number of inner corners in chessboard"
                                " (default: %(default)s)")
