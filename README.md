@@ -2,7 +2,7 @@
 LensCalibrator
 ========================
 
-__LensCalibrator__ converts coordinates in a picture to the real world based on multiple reference points in the picture.
+__LensCalibrator__ converts coordinates in a picture to the real-world based on multiple reference points in the picture using openCV.
 
 Requirements
 ------------------------
@@ -15,13 +15,14 @@ Requirements
 Sample
 ------------------------
 
-The blue circles are the reference points that located 1700 mm height from the floor and were manually plotted from still frames. The blue lines are guidelines connecting reference points drawn on an assumption. Then, the red circles are re-calculated points via this script from the original (blue) reference points.
+The blue circles in the images below are the reference points that located 1,700 mm height from the floor and were manually plotted from still frames. The blue lines are guidelines connecting reference points drawn on an assumption. Then, the red circles are re-calculated points via this script from the original (blue) reference points.
 
 |                | Image |
 |----------------|-------|
 | original image | <img src="documentation/example_original.png" width="480"/> |
 | undistorted    | <img src="documentation/example_undistortion.png" width="480"/> |
 | undistorted + projected | <img src="documentation/example_projection.png" width="480"/> |
+
 
 Usage
 ------------------------
@@ -66,10 +67,46 @@ format options:
 ```
 
 
-Location file format
+Mechanism of coordinates translation
 ------------------------
 
-- The file name must be `Location.csv`.
-- comma-separated, LF line endings
-- Each line describes the relationship between a reference point in the picture and the real world. The first three columns represent x,y,z coordinates in the real world in mm, and the remaining two columns represent x,y coordinates in the picture in pixel.
+This program, `calibrate.py`, translates x, y (,z) coordinates in a 2D picture to the real world in two steps:
+
+1. __undistortion__: Remove the camera lens distortion.
+2. __projection__: Translate coordinates from a 2D space to the real-world space.
+
+
+### 1. Undistotion
+
+There are two strategies for the removal of the camera lens distortion:
+
+1. Use reference points in the location file.
+2. Use a camera model file.
+
+You can choose one of those according to your data source. When a valid camera model file is given to the `calibrate.py` script with `-- camera` option, the second strategy is used; otherwise, the reference points in the location file is also used for the undistortion. In general, using a camera model file is recommended, especially when you have only a small number of reference points. If you use your reference points for undistortion, take many reference points, such as 20 or 30, to calculate accurate lens distortion.
+
+
+### 2. Projection
+
+The undistorted coordinates are then translated to the real-world space based on pairs of the reference point coordinates in the real-world and the picture.
+
+When you take a video data, Shoot some reference points, of which x,y,z coordinates are known, with the same camera condition. Here, more than four reference points for each elevation level are required. Afterwards, measure the x, y coordinates of those reference points in the picture. The reference points are described in a location file and given to the program via `--location` option.
+
+
+
+
+File format
+------------------------
+
+### Location file
+
+- CSV format: comma-separated, LF line endings.
+- Each line describes the relationship between a reference point in the picture and the real world. The first three columns represent x, y, z coordinates in the real world in mm, and the remaining two columns represent x,y coordinates in the picture in pixel.
 - See file at `test/Location.csv` for example.
+
+
+### Camera model file
+
+Create a camera model file using `modelcamera.py`. Take more than 20 pictures of a checker pattern with different angles and place all of them in the same directory. Run `modelcamera.py` by passing the path to the checker pattern picture directory. See `modelcamera.py --help` for details.
+
+You can obtain a checker pattern image from the openCV repository: [checker pattern image by openCV](https://github.com/opencv/opencv/blob/master/doc/pattern.png).
