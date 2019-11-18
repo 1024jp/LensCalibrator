@@ -2,35 +2,53 @@
 """
 
 
-(C) 2007-2017 1024jp
+(C) 2007-2018 1024jp
 """
+from collections import defaultdict
+from itertools import groupby
 
 import numpy as np
 import cv2
 
 
 class Projector:
-    def __init__(self, image_points, ideal_points):
-        self.homography = self._estimate_homography(image_points, ideal_points)
+    def __init__(self, image_points, dest_points):
+        # group by height
+        points = {}
+        for image_point, dest_point in zip(image_points, dest_points):
+            height = dest_point[2]
+            if height not in points:
+                points[height] = [[], []]
+            points[height][0].append(image_point)
+            points[height][1].append(dest_point[:2])
+
+        # get homography for each height
+        self.homographies = {}
+        for height, points in points.items():
+            self.homographies[height] = self._estimate_homography(*points)
 
     @staticmethod
-    def _estimate_homography(image_points, ideal_points):
+    def _estimate_homography(image_points, dest_points):
         """Find homography matrix.
         """
         fp = np.array(image_points)
-        tp = np.array(ideal_points)
+        tp = np.array(dest_points)
         H, _ = cv2.findHomography(fp, tp, 0)
         return H
 
-    def project_point(self, x, y):
+    def project_point(self, x, y, z=None):
         """Project x, y coordinates using homography matrix.
 
         Arguments:
-        homography (list[list[float]]) -- 3x3 homography matrix.
         x (float) -- x coordinate to project.
         y (float) -- y coordinate to project.
+        z (float) -- z coordinate to project.
         """
-        result = np.dot(self.homography, [x, y, 1])
+        if z:
+            homography = self.homographies[z]
+        else:
+            homography = list(self.homographies.values())[0]
+        result = np.dot(homography, [x, y, 1])
         projected_x = result[0] / result[2]
         projected_y = result[1] / result[2]
 

@@ -21,9 +21,9 @@ from modules.projection import Projector
 DEFAULT_IMAGE_SIZE = (3840, 2160)
 
 
-def main(data, outfile, camera_path=None, size=DEFAULT_IMAGE_SIZE):
+def main(data, outfile, camerafile=None, size=DEFAULT_IMAGE_SIZE):
     if camerafile:
-        undistorter = Undistorter.load(camera_path)
+        undistorter = Undistorter.load(camerafile)
     else:
         undistorter = Undistorter.init(data.image_points, data.dest_points,
                                        size)
@@ -32,21 +32,21 @@ def main(data, outfile, camera_path=None, size=DEFAULT_IMAGE_SIZE):
                           data.dest_points)
 
     # process data file
-    def processor_handler(x, y):
+    def processor_handler(x, y, z):
         x, y = undistorter.calibrate_points([(x, y)])[0]
-        return projector.project_point(x, y)
+        return projector.project_point(x, y, z)
     data.process_coordinates(processor_handler, outfile)
 
 
 def undistort(data, outfile, camerafile=None, size=DEFAULT_IMAGE_SIZE):
     if camerafile:
-        undistorter = Undistorter.load(camera_path)
+        undistorter = Undistorter.load(camerafile)
     else:
         undistorter = Undistorter.init(data.image_points, data.dest_points,
                                        size)
 
     # process data file
-    def processor_handler(x, y):
+    def processor_handler(x, y, z):
         return undistorter.calibrate_points([(x, y)])[0]
     data.process_coordinates(processor_handler, outfile)
 
@@ -55,8 +55,8 @@ def project(data, outfile):
     projector = Projector(data.image_points, data.dest_points)
 
     # process data file
-    def processor_handler(x, y):
-        return projector.project_point(x, y)
+    def processor_handler(x, y, z):
+        return projector.project_point(x, y, z)
     data.process_coordinates(processor_handler, outfile)
 
 
@@ -111,7 +111,8 @@ if __name__ == "__main__":
         unittest.TextTestRunner().run(suite)
         sys.exit()
 
-    data = Data(args.file, loc_path=args.location, in_cols=args.in_cols)
+    data = Data(args.file, loc_path=args.location, in_cols=args.in_cols,
+                z_col=args.z_col)
     main(data, args.out, args.camera, args.size)
 #     undistort(data, args.out, args.size)
 #     project(data, args.out)

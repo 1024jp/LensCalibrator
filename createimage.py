@@ -151,8 +151,8 @@ def main(data, saves_file=False, removes_perspective=True, shows_stats=False):
         # show stats if needed
         if shows_stats:
             diffs = []
-            for point, (dest_x, dest_y) in zip(undistorted_points,
-                                               data.dest_points):
+            for point, (dest_x, dest_y, dest_z) in zip(undistorted_points,
+                                                       data.dest_points):
                 x, y = projector.project_point(*point)
                 diffs.append([x - dest_x, y - dest_y])
             abs_diffs = [(abs(x), abs(y)) for x, y in diffs]
@@ -172,6 +172,7 @@ def main(data, saves_file=False, removes_perspective=True, shows_stats=False):
         image = scale_image(image, scale)
 
         for point in data.dest_points:
+            point = point[0:2]
             point = [scale * (l - origin) for l, origin in zip(point, rect[0])]
             plot_points(image, [point], color=(255, 128, 0))
 

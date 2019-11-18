@@ -72,14 +72,14 @@ class Parser(argparse.ArgumentParser):
                                  " directory of source fil)"
                             )
         input_.add_argument('--camera',
-                            type=str,
+                            type=argparse.FileType('rb'),
                             default=None,
                             metavar='FILE',
                             help="path to camera model file for undistortion"
                                  " (default: points in source file are used)"
                             )
 
-        # graph values
+        # format values
         fileformat = self.add_argument_group('format options')
         fileformat.add_argument('--size',
                                 type=int,
@@ -95,6 +95,13 @@ class Parser(argparse.ArgumentParser):
                                 default=[2, 3],
                                 metavar='INDEX',
                                 help=("column positions of x, y in file "
+                                      " (default: %(default)s)")
+                                )
+        fileformat.add_argument('--z_col',
+                                type=int,
+                                default=None,
+                                metavar='INDEX',
+                                help=("column position of z in file "
                                       " (default: %(default)s)")
                                 )
         fileformat.add_argument('--out_cols',
