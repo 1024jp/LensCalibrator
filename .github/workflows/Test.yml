@@ -1,0 +1,27 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Test Python code
+    runs-on: macOS-latest
+    strategy:
+      matrix:
+        python-version: [3.7]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install modules
+      run: |
+        pip install -r requirements.txt
+        pip install pycodestyle
+    - name: Lint
+      run: |
+        pycodestyle .
+    - name: Test
+      run: |
+        python -m unittest calibrate.py

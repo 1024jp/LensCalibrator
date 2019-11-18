@@ -2,6 +2,8 @@
 LensCalibrator
 ========================
 
+[![Test Status](https://github.com/1024jp/LensCalibrator/workflows/Test/badge.svg)](https://github.com/1024jp/LensCalibrator/actions)
+
 __LensCalibrator__ converts coordinates in a picture to the real-world based on multiple reference points in the picture using openCV.
 
 Requirements
