@@ -33,9 +33,10 @@ See `--help`.
 
 ```sh
 $ ./calibrate.py --help
-usage: calibrate.py [-h] [--version] [-t] [-v] [--out FILE]
-                    [--size WIDTH HEIGHT] [--in_cols INDEX INDEX]
-                    [--out_cols INDEX INDEX] [-z Z]
+usage: calibrate.py [-h] [--version] [-t] [-v] [--out FILE] [--location FILE]
+                    [--camera FILE] [--size WIDTH HEIGHT]
+                    [--in_cols INDEX INDEX] [--z_col INDEX]
+                    [--out_cols INDEX INDEX]
                     [FILE]
 
 Translate coordinates in a picture to the real world.
@@ -63,6 +64,7 @@ format options:
   --size WIDTH HEIGHT   dimension of the image (default: (3840, 2160))
   --in_cols INDEX INDEX
                         column positions of x, y in file (default: [2, 3])
+  --z_col INDEX         column position of z in file (default: None)
   --out_cols INDEX INDEX
                         column positions of x, y in file for calibrated data
                         (default: same as in_cols
@@ -85,7 +87,7 @@ There are two strategies for the removal of the camera lens distortion:
 1. Use reference points in the location file.
 2. Use a camera model file.
 
-You can choose one of those according to your data source. When a valid camera model file is given to the `calibrate.py` script with `-- camera` option, the second strategy is used; otherwise, the reference points in the location file is also used for the undistortion. In general, using a camera model file is recommended, especially when you have only a small number of reference points. If you use your reference points for undistortion, take many reference points, such as 20 or 30, to calculate accurate lens distortion.
+You can choose one of those according to your data source. When a valid camera model file is given to the `calibrate.py` script with `--camera` option, the second strategy is used; otherwise, the reference points in the location file is also used for the undistortion. In general, using a camera model file is recommended, especially when you have only a small number of reference points. If you use your reference points for undistortion, take many reference points, such as 20 or 30, to calculate accurate lens distortion.
 
 
 ### 2. Projection
