@@ -2,7 +2,7 @@
 """
 
 
-(C) 2007-2018 1024jp
+(C) 2007-2019 1024jp
 """
 
 import pickle
@@ -48,9 +48,10 @@ class Undistorter:
         pickle.dump(self, f)
 
     def calibrate_points(self, points):
-        return cv2.undistortPoints(np.array([points]), self.camera_matrix,
+        dest = cv2.undistortPoints(np.array([points]), self.camera_matrix,
                                    self.dist_coeffs,
-                                   P=self.new_camera_matrix)[0]
+                                   P=self.new_camera_matrix)
+        return np.squeeze(dest)
 
     def undistort_image(self, image):
         return cv2.undistort(image, self.camera_matrix, self.dist_coeffs,
