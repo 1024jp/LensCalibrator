@@ -56,7 +56,7 @@ output options:
 
 input options:
   --location FILE       path to location file (default: Localiton.csv in the
-                        same directory of source fil)
+                        same directory of source file)
   --camera FILE         path to camera model file for undistortion (default:
                         points in source file are used)
 
@@ -67,7 +67,7 @@ format options:
   --z_col INDEX         column position of z in file (default: None)
   --out_cols INDEX INDEX
                         column positions of x, y in file for calibrated data
-                        (default: same as in_cols
+                        (default: same as in_cols)
 ```
 
 

@@ -2,7 +2,7 @@
 
 """Command line arguments parser.
 
-(C) 2016-2018 1024jp
+(C) 2016-2019 1024jp
 """
 
 import argparse
@@ -69,7 +69,7 @@ class Parser(argparse.ArgumentParser):
                             metavar='FILE',
                             help="path to location file"
                                  " (default: Localiton.csv in the same"
-                                 " directory of source fil)"
+                                 " directory of source file)"
                             )
         input_.add_argument('--camera',
                             type=argparse.FileType('rb'),
@@ -111,7 +111,7 @@ class Parser(argparse.ArgumentParser):
                                 metavar='INDEX',
                                 help=("column positions of x, y in file for"
                                       " calibrated data"
-                                      " (default: same as in_cols")
+                                      " (default: same as in_cols)")
                                 )
 
     @property
