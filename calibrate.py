@@ -2,7 +2,7 @@
 """
 Remove distortion of camera lens and project to the real world coordinates.
 
-(C) 2016-2018 1024jp
+(C) 2016-2019 1024jp
 """
 
 import io
@@ -33,7 +33,7 @@ def main(data, outfile, camerafile=None, size=DEFAULT_IMAGE_SIZE):
 
     # process data file
     def processor_handler(x, y, z):
-        x, y = undistorter.calibrate_points([(x, y)])[0]
+        x, y = undistorter.calibrate_points([(x, y)])
         return projector.project_point(x, y, z)
     data.process_coordinates(processor_handler, outfile)
 
@@ -47,7 +47,7 @@ def undistort(data, outfile, camerafile=None, size=DEFAULT_IMAGE_SIZE):
 
     # process data file
     def processor_handler(x, y, z):
-        return undistorter.calibrate_points([(x, y)])[0]
+        return undistorter.calibrate_points([(x, y)])
     data.process_coordinates(processor_handler, outfile)
 
 
