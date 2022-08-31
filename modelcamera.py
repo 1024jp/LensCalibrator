@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Create camera model from chessboard images.
 
-(C) 2018 1024jp
+(C) 2018-2022 1024jp
 """
 
 import argparse
@@ -71,7 +71,7 @@ def main(imgdir_path, out_path, chessboard_size, displays=False):
         # display detection result
         img = cv2.drawChessboardCorners(img, chessboard_size, corners, found)
         if displays:
-            display_size = tuple([int(l / 2) for l in image_size])
+            display_size = tuple([int(length / 2) for length in image_size])
             img = cv2.resize(img, display_size)
             cv2.imshow('Chessboard', img)
             cv2.waitKey(0)  # wait for key press

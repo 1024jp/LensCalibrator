@@ -2,7 +2,7 @@
 """
 Datafile object for tracklog and Loc file.
 
-(C) 2016-2018 1024jp
+(C) 2016-2022 1024jp
 """
 
 import csv
@@ -77,7 +77,7 @@ class Data:
                 if len(row) < 4:
                     continue
                 first_char = row[0][0]
-                if first_char.isalpha() or first_char is '#':
+                if first_char.isalpha() or first_char == '#':
                     continue
                 row = list(map(float, row))
                 image_point = row[3:5]

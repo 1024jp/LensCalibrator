@@ -2,7 +2,7 @@
 """
 Undistort image.
 
-(C) 2016-2018 1024jp
+(C) 2016-2022 1024jp
 """
 
 import math
